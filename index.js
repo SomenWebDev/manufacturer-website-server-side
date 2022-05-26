@@ -22,10 +22,12 @@ async function run() {
   try {
     await client.connect();
     const productCollection = client.db("manufacturer").collection("products");
+    const orderCollection = client.db("manufacturer").collection("orders");
+    const userCollection = client.db("manufacturer").collection("users");
+
+    // Products API
 
     app.get("/product", async (req, res) => {
-      //   const query = {};
-      //   const cursor = productCollection.find(query);
       const products = await productCollection.find().toArray();
       res.send(products);
     });
@@ -35,6 +37,35 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const product = await productCollection.findOne(query);
       res.send(product);
+    });
+
+    // User API
+
+    app.put("/user/:email", async (req, res) => {
+      const email = req.params.email;
+      const user = req.body;
+      const filter = { email: email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: user,
+      };
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
+
+    // Order API
+
+    app.get("/order", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const orders = await orderCollection.find(query).toArray();
+      res.send(orders);
+    });
+
+    app.post("/order", async (req, res) => {
+      const order = req.body;
+      const result = await orderCollection.insertOne(order);
+      res.send(result);
     });
   } finally {
     // Ensures that the client will close when you finish/error
