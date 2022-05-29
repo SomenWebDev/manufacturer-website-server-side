@@ -40,6 +40,7 @@ async function run() {
     const productCollection = client.db("manufacturer").collection("products");
     const orderCollection = client.db("manufacturer").collection("orders");
     const userCollection = client.db("manufacturer").collection("users");
+    const reviewCollection = client.db("manufacturer").collection("reviews");
 
     // Products API
 
@@ -53,6 +54,25 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const product = await productCollection.findOne(query);
       res.send(product);
+    });
+
+    app.post("/product", async (req, res) => {
+      const product = req.body;
+      const result = await productCollection.insertOne(product);
+      res.send(result);
+    });
+
+    app.delete("/product/:id", verifyJWT, async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await productCollection.deleteOne(filter);
+      res.send(result);
+    });
+
+    // create review api
+
+    app.post("/review", async (req, res) => {
+      const review = req.body;
     });
 
     // User API
