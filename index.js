@@ -73,6 +73,13 @@ async function run() {
 
     app.post("/review", async (req, res) => {
       const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
+    app.get("/review", async (req, res) => {
+      const reviews = await reviewCollection.find().toArray();
+      res.send(reviews);
     });
 
     // User API
@@ -160,3 +167,4 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(` ${port}`);
 });
+module.exports = app;
