@@ -76,7 +76,7 @@ async function run() {
       const result = await reviewCollection.insertOne(review);
       res.send(result);
     });
-
+    // review api
     app.get("/review", async (req, res) => {
       const reviews = await reviewCollection.find().toArray();
       res.send(reviews);
