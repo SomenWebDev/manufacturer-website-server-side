@@ -27,6 +27,7 @@ function verifyJWT(req, res, next) {
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
     if (err) {
+      console.log(err);
       return res.status(403).send({ message: "Forbidden Access" });
     }
     req.decoded = decoded;
@@ -41,6 +42,7 @@ async function run() {
     const orderCollection = client.db("manufacturer").collection("orders");
     const userCollection = client.db("manufacturer").collection("users");
     const reviewCollection = client.db("manufacturer").collection("reviews");
+    const infoCollection = client.db("manufacturer").collection("infos");
 
     // Products API
 
@@ -65,9 +67,17 @@ async function run() {
     app.delete("/product/:id", verifyJWT, async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
+      console.log(id);
       const result = await productCollection.deleteOne(filter);
       res.send(result);
     });
+
+
+    //  create info API
+    
+
+
+
 
     // create review api
 
