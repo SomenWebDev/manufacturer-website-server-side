@@ -2,12 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+
+const ObjectId = require("mongodb").ObjectId;
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({ origin: "https://manufacturer-website-ba546.web.app" }));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.6tmhr.mongodb.net/?retryWrites=true&w=majority`;
@@ -71,8 +73,6 @@ async function run() {
       const result = await productCollection.deleteOne(filter);
       res.send(result);
     });
-
-    //  create info API
 
     // create review api
 
